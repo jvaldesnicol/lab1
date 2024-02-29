@@ -153,7 +153,7 @@ static void sevenseg_set_hex(int hex)
 		0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71};  /*a-f */
 
 
-    unsigned int data = segments[hex % 10] | (segments[(hex  / 10) % 10] << 8);
+    unsigned int data = segments[hex % 10] | (segments[(hex  / 10) % 10] << 8); /* modified in order to count 1-10 */
     IOWR_ALTERA_AVALON_PIO_DATA(SEVEN_SEG_PIO_BASE, data);
 
 }
@@ -264,11 +264,11 @@ static void handle_button_press(alt_u8 type, FILE *lcd)
         case 0x2:
             count_sevenseg();
             break;
-            /* Button 3:  Output counting to D only. */
+            /* Button 3: Output counting to LED, SEVEN_SEG, and D. MODIFIED*/ 
         case 0x4:
         	count_all( lcd );
             break;
-            /* Button 4:  Output counting to LED, SEVEN_SEG, and D. */ 
+            /* Button 4:Output counting to D only.  MODIFIED */  
         case 0x8:
         	count_lcd( lcd );
             break;
@@ -344,22 +344,21 @@ int main(void)
 
     count = 0;
 
-    int studentID_1 = 33245624;
-    int studentID_2 = 33259632;
+    int studentID_1 = 33245624; /* Luke M Student ID */
+    int studentID_2 = 33259632; /* Jaime V Student ID */
 
     int sum = 0;
 
     while (studentID_1 > 0) {
-    	sum += studentID_1 %10;
+    	sum += studentID_1 %10; /* adds all numbers within student ID into sum */
     	studentID_1 /= 10;
     }
     while (studentID_2 > 0) {
-    	sum += studentID_2 %10;
+    	sum += studentID_2 %10; /* adds all numbers within student ID into sum*/
     	studentID_2 /= 10;
     }
 
-    sum %= 100;
-    printf("THIS IS THE COUNT: %d", sum);
+    sum %= 100; 
 
 
     /* Initialize the LCD, if there is one.
@@ -396,7 +395,7 @@ int main(void)
          * If done counting, wait about 7 seconds...
          * detect button presses while waiting.
          */
-        if( count == sum )
+        if( count == sum ) /* do if count equal sum of student IDs*/
         {
             LCD_PRINTF(lcd, "%c%s %c%s %c%s Waiting...\n", ESC, ESC_TOP_LEFT,
                        ESC, ESC_CLEAR, ESC, ESC_COL1_INDENT5);
@@ -422,7 +421,7 @@ int main(void)
                 usleep(10000); /* Sleep for 0.1s. */
 
             }
-            /*  Output the "loop start" messages before looping, again.
+            /*  Output the "loop start" BREAKS.
              */
             break;
         }
